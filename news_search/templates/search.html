@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="/images/favicon.png">
+    <title>新闻检索</title>
+</head>
+
+<body>
+<div class="container">
+    <br>
+    <br>
+    <form class="form-inline" method="post" action="/">
+
+        <div class="form-group">
+            <input type="text" style="height: 40px; width: 360px;" class="form-control" ng-model="query"
+                   value="{{ query }}" name="query" id="query"/>
+        </div>
+        <input class="btn btn-small btn-success" role="button" type="submit" value="搜索" id="btn">
+    </form>
+
+    <br>
+
+    <br>
+    找到 {{ length }} 条结果
+    <br>
+        <form style="float:left;" method="get">
+        <input type="text" value="{{page}}" name="page" size="1">/{{pages}}页
+        <input type="submit" value="跳转">
+        </form>
+
+        <form style="float:left;" method="get">
+        <input type="hidden" value="{{page - 1}}" name="page" >
+        <input type="submit" value="上一页">
+        </form>
+
+        <form  method="get">
+        <input type="hidden" value="{{page + 1}}" name="page" >
+        <input type="submit" value="下一页">
+        </form>
+    <br>
+
+    <div id="box">
+    {% for doc in docs %}
+    <p><a href="{{ doc[0] }}" target="_blank">{{ doc[1]|safe }} -> {{ doc[3] }}</a></p>
+    <p>{{ doc[2]|safe }}</p>
+    <p><a href="{{ doc[0] }}" target="_blank">来源：{{ doc[0]|safe }}</a></p>
+    <form method="get" action="/snapshot" target="_blank">
+    <input type="hidden" value="{{ doc[0] }}" name="snapshot">
+    <input type="submit" value="网页快照">
+    </form>
+    <br>
+    {% endfor %}
+    </div>
+
+    <br>
+    <form style="float:left;" method="get">
+        <input type="text" value="{{page}}" name="page" size="1">/{{pages}}页
+        <input type="submit" value="跳转">
+    </form>
+
+    <form style="float:left;" method="get">
+        <input type="hidden" value="{{page - 1}}" name="page" >
+        <input type="submit" value="上一页">
+    </form>
+
+    <form  method="get">
+        <input type="hidden" value="{{page + 1}}" name="page" >
+        <input type="submit" value="下一页">
+    </form>
+    <br>
+
+</div>
+</body>
+<br>
+<br>
+</html>

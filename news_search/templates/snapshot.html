@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>{{ doc["article"]["title"]}}</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,height=device-height"/>
+    <link rel="icon" type="image/x-icon" href="/images/favicon.png">
+    <style type="text/css">
+        .wrapper{ width:760px; margin:0 auto;}
+        .center-text {
+            text-align: center;
+        }
+        .cnt_bd{padding-bottom:14px;}
+        .cnt_bd h1{font:32px "微软雅黑"; font-weight: 700;text-align:center;}
+        .cnt_bd h2{font:26px "微软雅黑"; text-align:center;}
+        .cnt_bd p{font:20px "宋体";display: inline-block; text-align:justify;}
+        .cnt_bd b {font-weight: 700; color: var(--emphasis-color);}
+        .cnt_bd img {
+            max-width: 100%;
+            max-height: 400px;
+            height: auto;
+            margin: 0.2em 0;
+        }
+        .cnt_bd figure {
+            position: relative;
+            clear: both;
+            outline: 0;
+            margin: 10px 0 30px;
+            padding: 0;
+            min-height: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="center-text">
+            <div class="cnt_bd">
+                <br>
+                <br>
+                <h1>{{ doc["article"]["title"]}}</h1>
+                <br>
+                <p><a href={{ doc["url"]}} target="_blank" >阅读原文</a></p>
+                <br>
+                <p>{{ doc["article"]["author"]}}  {{ doc["article"]["publish_time"]}}</p>
+                <br>
+                <p>{{ doc["article"]["content_html"]|safe }}</p>
+                <br>
+                <br>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+
