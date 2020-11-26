@@ -76,8 +76,8 @@ def get_essay(url):
 
 
 # if __name__ == "__main__":
-# 	url = ["https://news.163.com/20/0529/13/FDQ3Q92B00019B3E.html", "http://news.ifeng.com/c/7kyf1it2RUx","http://www.xinhuanet.com/2019-08/26/c_1124923784.htm"]
-# 	get_essay(url)
+# 	u = ["https://dy.163.com/article/FSC51I8R0514C9B7.html", "http://news.ifeng.com/c/7kyf1it2RUx","http://www.xinhuanet.com/2019-08/26/c_1124923784.htm"]
+# 	get_essay(u)
 # n = get_url_numbers()
 # get_url()
 # 	delete("http://news.ifeng.com/c/7qVFnhzQf44")

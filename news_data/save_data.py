@@ -1,36 +1,47 @@
 #! /usr/bin/python3
 # coding=utf-8
 
-import datetime
 import sys
 sys.path.append("..")
-from news_search.mongo_config import collection
+from news_search.mongo_config import articles_collection, snapshots_collection
 
 
 def remove_article():
-	collection.remove()
+	articles_collection.remove()
 
 
 def add_article(url, article):
 	# print(url)
+	snapshots_dict = {
+		"url": url,
+		"article.content_html": article['content_html'],
+		"article.images": article['images']
+	}
+
+	snapshots_collection.update_one(
+		{"url": url},
+		{'$setOnInsert': snapshots_dict},
+		upsert=True
+	)
+
+	del article['content_html']
+	del article['images']
+	# print("\t" + article)
+
 	article_dict = {
 		"url": url,
-		"article": article,
-		"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+		"article": article
 	}
-	if article is not None:
-		try:
-			collection.update_one(
-				{"url": url},
-				{'$setOnInsert': article_dict},
-				upsert=True
-			)
-		except Exception as error:
-			print(error)
+
+	articles_collection.update_one(
+		{"url": url},
+		{'$setOnInsert': article_dict},
+		upsert=True
+	)
 
 
 def url_exist(url):
-	results = collection.find({"url": url})
+	results = articles_collection.find({"url": url})
 	for res in results:
 		if res:
 			return True

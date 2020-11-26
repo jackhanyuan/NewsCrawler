@@ -3,8 +3,10 @@
 
 import re
 import jieba
-from mongo_config import collection
+from mongo_config import articles_collection, snapshots_collection
 import base64
+import os
+import shutil
 
 
 # 检查是否有中文字符
@@ -23,7 +25,7 @@ def mongo_search(query):
 	if check_contain_chinese(query):
 		regx1 = re.compile(query, re.IGNORECASE)
 		query1 = {"$and": [{"article.title": regx1}, {"article.content": regx1}]}
-		results1 = collection.find(query1, {"_id": 1})
+		results1 = articles_collection.find(query1, {"_id": 1})
 		for result in results1:
 			if result not in res:
 				# print(result["article"]['title'])
@@ -42,8 +44,8 @@ def mongo_search(query):
 		for query_term in query_list:
 			regx2 = re.compile(".*?" + query_term + ".*?", re.IGNORECASE)
 			query2 = {"$and": [{"article.title": regx2}, {"article.content": regx2}]}
-			results2 = collection.find(query2, {"_id": 1})
-			# explain = results2.explai()  # 测试result2命令是否用索引
+			results2 = articles_collection.find(query2, {"_id": 1})  # 只返回_id
+			# explain = results2.explain()  # 测试result2命令是否用索引
 			# print(explain["executionStats"]['totalKeysExamined'])
 			for result in results2:
 				if result not in res:
@@ -54,7 +56,7 @@ def mongo_search(query):
 		for query_term in query_list:
 			regx3 = re.compile(".*?" + query_term + ".*?", re.IGNORECASE)
 			query3 = {"$or": [{"article.title": regx3}, {"article.content": regx3}]}
-			results3 = collection.find(query3, {"_id": 1})
+			results3 = articles_collection.find(query3, {"_id": 1})
 			for result in results3:
 				if result not in res:
 					# print(result["article"]['title'])
@@ -63,7 +65,7 @@ def mongo_search(query):
 	# print("-" * 50)
 
 	# 如果全英文，英文文本完全匹配
-	results3 = collection.find({"$text": {"$search": '"' + query + '"'}}, {"_id": 1, "score": {"$meta": 'textScore'}})
+	results3 = articles_collection.find({"$text": {"$search": '"' + query + '"'}}, {"_id": 1, "score": {"$meta": 'textScore'}})
 	results3 = sorted(results3, key=lambda k: -k['score'])
 	# print(results3)
 
@@ -79,7 +81,7 @@ def mongo_search(query):
 	# results4 = collection.find({"$text": {"$search": query}}, {"score": {"$meta": 'textScore'}}).sort(
 	# 	[('score', {'$meta': 'textScore'})]) # 此方法数据过大时会内存溢出
 	# 不返回"article.images"数据，解决内存不足问题
-	results4 = collection.find({"$text": {"$search": query}}, {"_id": 1, "score": {"$meta": 'textScore'}})
+	results4 = articles_collection.find({"$text": {"$search": query}}, {"_id": 1, "score": {"$meta": 'textScore'}})
 	results4 = sorted(results4, key=lambda k: -k['score'])
 	# explain = results4.explain()  # 测试result2命令是否用索引
 	# print(explain["executionStats"]['totalKeysExamined'])
@@ -99,7 +101,7 @@ def content_search(id_list):
 	res = []
 	for id_dict in id_list:
 		query_id = id_dict["_id"]
-		result = collection.find({"_id": query_id}, {"article.images": 0})
+		result = articles_collection.find({"_id": query_id})
 		# explain = result.explain()  # 测试result2命令是否用索引
 		# print(explain["executionStats"]['totalKeysExamined'])
 		# print(result[0])
@@ -107,8 +109,14 @@ def content_search(id_list):
 	return res
 
 
+def info_search(url):
+	results = articles_collection.find({"url": url}, {"article.content": 0})
+	for res in results:
+		return res
+
+
 def snapshot_search(url):
-	results = collection.find({"url": url})
+	results = snapshots_collection.find({"url": url})
 	# explain = results.explain()  # 测试result2命令是否用索引
 	# print(explain["executionStats"]['totalKeysExamined'])
 	for res in results:
@@ -124,7 +132,7 @@ def str2img(url):
 		for img_data in img_list:
 			count += 1
 			n = url.rindex('/')
-			file_name = re.sub(r'\W', '', url[n+1:])
+			file_name = re.sub(r'\W', '', url[n + 1:])
 			img_name = "snapshots/" + file_name + "_" + str(count) + ".jpg"
 			with open("static/" + img_name, 'wb') as f:
 				img = base64.b64decode(img_data)
@@ -133,6 +141,21 @@ def str2img(url):
 	return images
 
 
+# 删除快照目录图片缓存
+def del_file(filepath):
+	"""
+	删除某一目录下的所有文件或文件夹
+	:param filepath: 路径
+	:return:
+	"""
+	del_list = os.listdir(filepath)
+	for f in del_list:
+		file_path = os.path.join(filepath, f)
+		if os.path.isfile(file_path):
+			os.remove(file_path)
+		elif os.path.isdir(file_path):
+			shutil.rmtree(file_path)
+
 # mongo_search('特朗普 November 20, 2020')
 # r = snapshot_search("http://news.ifeng.com/c/7uxehhNwFJg")
 # print(r)
@@ -140,3 +163,4 @@ def str2img(url):
 # r2 = content_search(mongo_search('特朗普'))
 # print(len(r2), r2)
 # str2img("https://news.china.com/socialgd/10000169/20200610/38331646.html")
+# del_file("./static/snapshots")

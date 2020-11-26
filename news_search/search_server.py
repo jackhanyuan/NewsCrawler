@@ -2,7 +2,7 @@
 # coding=utf-8
 
 from flask import Flask, request, render_template, redirect, url_for
-from search import mongo_search, snapshot_search, content_search, str2img
+from search import mongo_search, snapshot_search, content_search, info_search, str2img, del_file
 import jieba
 import re
 import math
@@ -103,10 +103,12 @@ def highlight(docs, terms):  # 高亮doc中term部分
 def show_snapshot():
     if request.method == 'GET' and request.values.get('snapshot'):
         url = request.values.get('snapshot')
-        query_result = snapshot_search(url)
+        snapshot_result = snapshot_search(url)
+        info_result = info_search(url)
+        del_file("./static/snapshots")
         images = str2img(url)
         # print(images)
-        return render_template('snapshot.html', doc=query_result, images=images)
+        return render_template('snapshot.html', doc=snapshot_result, info=info_result, images=images)
     return render_template('index.html')
 
 

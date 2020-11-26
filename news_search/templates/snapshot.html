@@ -40,11 +40,11 @@
             <div class="cnt_bd">
                 <br>
                 <br>
-                <h1>{{ doc["article"]["title"]}}</h1>
+                <h1>{{ info["article"]["title"]}}</h1>
                 <br>
                 <p><a href={{ doc["url"]}} target="_blank" >阅读原文</a></p>
                 <br>
-                <p>{{ doc["article"]["author"]}}  {{ doc["article"]["publish_time"]}}</p>
+                <p>{{ info["article"]["author"]}}  {{ info["article"]["publish_time"]}}</p>
                 <br>
                 <p>{{ doc["article"]["content_html"]|safe }}</p>
                 <br>

@@ -10,7 +10,7 @@ import re
 import urllib.request
 import base64
 from lxml import etree
-from fake_useragent import UserAgent
+from user_agent import random_agent
 
 
 def open_chrome():
@@ -22,15 +22,6 @@ def open_chrome():
 	# chrome_opt.add_argument('--proxy-server=' + '47.240.88.149')  # 设置代理
 	driver = webdriver.Chrome(executable_path=r'/usr/bin/chromedriver', options=chrome_opt)
 	return driver
-
-
-def random_agent():
-	agent = UserAgent().random
-	# agent = UserAgent().firefox
-	# agent = UserAgent().chrome
-	# agent = UserAgent().safari
-	# print('\t' + agent)
-	return agent
 
 
 def get_contents(driver, temp_url):
