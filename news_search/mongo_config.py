@@ -3,8 +3,8 @@
 import pymongo
 
 
-client = pymongo.MongoClient(host='localhost', port=27017, connect=False)
-# client = pymongo.MongoClient(host='119.45.239.159', port=27017, connect=False)
+# client = pymongo.MongoClient(host='localhost', port=27017, connect=False)
+client = pymongo.MongoClient(host='119.45.239.159', port=27017, connect=False)
 client.admin.authenticate("root", "4621", mechanism='SCRAM-SHA-1')
 db = client.news
 articles_collection = db.articles

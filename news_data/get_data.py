@@ -8,7 +8,8 @@ from save_data import add_article, url_exist
 import datetime
 import random
 
-db = pymysql.connect(host='localhost', user='root', port=3306, passwd='4621', db='NEWS', use_unicode=True)
+# db = pymysql.connect(host='localhost', user='root', port=3306, passwd='4621', db='NEWS', use_unicode=True)
+db = pymysql.connect(host='119.45.239.159', user='root', port=3306, passwd='4621', db='NEWS', use_unicode=True)
 
 
 def sql_time():

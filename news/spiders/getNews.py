@@ -77,6 +77,7 @@ if __name__ == "__main__":
 		"https://www.huanqiu.com/",
 		"https://news.qq.com/",
 		"https://news.ifeng.com/",
-		"http://www.chinanews.com/"
+		"http://www.chinanews.com/",
+		"http://www.chinadaily.com.cn/"
 	]
 	processes(urls, len(urls))
